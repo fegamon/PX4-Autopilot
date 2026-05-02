@@ -76,4 +76,14 @@ param set-default SIM_GZ_EC_MAX2 1000
 param set-default SIM_GZ_EC_MAX3 1000
 param set-default SIM_GZ_EC_MAX4 1000
 
+# --- Actuador VRA (servo aux 1, bomba de aspersión AgroSwarm) ---
+# SV_FUNC1=201 mapea el canal 1 del bridge gz a ACTUATOR_FUNCTION_SERVO0
+# (actuator_servos.control[0]). DIS=0 y FAIL=0 garantizan que la bomba quede
+# apagada en disarm o failsafe — fail-safe químico crítico para hardware real.
+param set-default SIM_GZ_SV_FUNC1 201
+param set-default SIM_GZ_SV_MIN1 0
+param set-default SIM_GZ_SV_MAX1 1000
+param set-default SIM_GZ_SV_DIS1 0
+param set-default SIM_GZ_SV_FAIL1 0
+
 param set-default MPC_THR_HOVER 0.60
