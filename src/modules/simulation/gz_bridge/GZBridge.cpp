@@ -150,7 +150,9 @@ int GZBridge::init()
 
 		// If PX4_GZ_STANDALONE has been set, you can try to connect but GZ_SIM_RESOURCE_PATH needs to be set correctly to work.
 		else {
-			if (_node.Request(create_service, req, 1000, rep, result)) {
+			// 30s timeout: cold-start envs (AWS EBS gp3, slow disks) need
+			// more than 1s for gz server to expose the create service.
+			if (_node.Request(create_service, req, 30000, rep, result)) {
 				if (!rep.data() || !result) {
 					PX4_ERR("EntityFactory service call failed.");
 					return PX4_ERROR;
