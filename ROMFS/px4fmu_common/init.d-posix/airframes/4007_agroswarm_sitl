@@ -16,27 +16,24 @@ PX4_SIM_MODEL=${PX4_SIM_MODEL:=x500}
 
 param set-default SIM_GZ_EN 1
 
-# Configuración de sensores para SITL (Alta fidelidad para AWS)
+# Configuración de sensores para SITL
+# Mag habilitado: sin mag en reposo, EKF2 no fija heading absoluto y
+# `heading_good_for_control` no se establece (preflight Yaw/Global Pos bloquea).
+# Baro habilitado y usado como height ref por EKF2_HGT_REF=0 (GPS sim de
+# gz navsat deriva en altitud; baro sim es estable).
 param set-default SENS_EN_GPSSIM 1
 param set-default SENS_EN_BAROSIM 1
-param set-default SENS_EN_MAGSIM 0
+param set-default SENS_EN_MAGSIM 1
 
-# --- CONFIGURACIÓN DE PRODUCCIÓN AGROSWARM (AWS READY) ---
-# Desactivar magnetómetro (mecanismo oficial de anulación)
-param set-default SYS_HAS_MAG 0
-param set-default EKF2_MAG_TYPE 5
-
-# EKF2 Standard (Sin hacks de baja potencia)
+# EKF2 — baro como height ref (GPS sim deriva, baro sim estable)
 param set-default EKF2_GPS_CHECK 1
 param set-default EKF2_HGT_REF 0
 param set-default COM_ARM_WO_GPS 0
 param set-default COM_ARM_EKF_YAW 0.5
 
 # Seguridad y Failsafes Reales (Standard PX4)
-param set-default SYS_LOCKSTEP 1
 param set-default COM_ARM_IMU_ACC 0.1
 param set-default COM_ARM_IMU_GYR 0.1
-param set-default COM_SENS_STK_IT 0.5
 
 # Operaciones sin RC físico
 param set-default NAV_RCL_ACT 0
