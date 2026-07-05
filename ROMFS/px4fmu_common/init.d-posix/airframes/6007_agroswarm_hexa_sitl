@@ -1,0 +1,108 @@
+#!/bin/sh
+#
+# @name AgroSwarm Hexarotor SITL (EFT E610)
+#
+# @type Hexarotor x
+#
+# @maintainer Freddy (AgroSwarmAI)
+#
+# SITL-only airframe. GZ model: x500_hexa.
+# Motor bridge: SIM_GZ_EC_FUNC1..6 = 101..106.
+# Chemical pump (VRA sprayer): SIM_GZ_SV_FUNC1=201, DIS=0, FAIL=0
+#   (chemical failsafe: pump off on disarm and any failsafe — PR-3 invariant).
+#
+# NOTE: arm length and X8 motor KM values below are SITL-compatible placeholders
+# copied from stock 6001_hexa_x. Real E610 arm length + X8 KM are deferred to
+# pre-flight tuning (open task: hexa-e610 physical commissioning).
+#
+
+. ${R}etc/init.d/rc.mc_defaults
+
+PX4_SIMULATOR=${PX4_SIMULATOR:=gz}
+PX4_GZ_WORLD=${PX4_GZ_WORLD:=default}
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=x500_hexa}
+
+param set-default SIM_GZ_EN 1
+
+# GZ model binding — must match directory name under gz/models/
+PX4_GZ_MODEL=x500_hexa
+
+# Sensor simulation
+param set-default SENS_EN_GPSSIM 1
+param set-default SENS_EN_BAROSIM 1
+param set-default SENS_EN_MAGSIM 1
+
+# EKF2 — baro as height ref (GPS sim drifts in altitude; baro sim is stable)
+param set-default EKF2_GPS_CHECK 1
+param set-default EKF2_HGT_REF 0
+param set-default COM_ARM_WO_GPS 0
+param set-default COM_ARM_EKF_YAW 0.5
+
+# IMU arming thresholds
+param set-default COM_ARM_IMU_ACC 0.1
+param set-default COM_ARM_IMU_GYR 0.1
+
+# SITL has no RC hardware; fly-away guard MUST be disabled
+param set-default NAV_RCL_ACT 0
+
+# --- Hexa-X geometry (stock PX4 6001_hexa_x, 60-degree spacing) ---
+# KM sign convention: negative = CW (motors 0, 2, 5); positive = CCW (motors 1, 3, 4).
+# Arm length placeholder: 0.5 m / 0.25 m (hexa-X unit geometry).
+# Replace with real E610 arm length during physical commissioning.
+param set-default CA_AIRFRAME 0
+param set-default CA_ROTOR_COUNT 6
+
+param set-default CA_ROTOR0_PX 0
+param set-default CA_ROTOR0_PY 0.5
+param set-default CA_ROTOR0_KM -0.05
+
+param set-default CA_ROTOR1_PX 0
+param set-default CA_ROTOR1_PY -0.5
+param set-default CA_ROTOR1_KM 0.05
+
+param set-default CA_ROTOR2_PX 0.43
+param set-default CA_ROTOR2_PY -0.25
+param set-default CA_ROTOR2_KM -0.05
+
+param set-default CA_ROTOR3_PX -0.43
+param set-default CA_ROTOR3_PY 0.25
+param set-default CA_ROTOR3_KM 0.05
+
+param set-default CA_ROTOR4_PX 0.43
+param set-default CA_ROTOR4_PY 0.25
+param set-default CA_ROTOR4_KM 0.05
+
+param set-default CA_ROTOR5_PX -0.43
+param set-default CA_ROTOR5_PY -0.25
+param set-default CA_ROTOR5_KM -0.05
+
+# --- GZ ESC bridge: 6 motors → functions 101-106 ---
+param set-default SIM_GZ_EC_FUNC1 101
+param set-default SIM_GZ_EC_FUNC2 102
+param set-default SIM_GZ_EC_FUNC3 103
+param set-default SIM_GZ_EC_FUNC4 104
+param set-default SIM_GZ_EC_FUNC5 105
+param set-default SIM_GZ_EC_FUNC6 106
+
+param set-default SIM_GZ_EC_MIN1 150
+param set-default SIM_GZ_EC_MIN2 150
+param set-default SIM_GZ_EC_MIN3 150
+param set-default SIM_GZ_EC_MIN4 150
+param set-default SIM_GZ_EC_MIN5 150
+param set-default SIM_GZ_EC_MIN6 150
+
+param set-default SIM_GZ_EC_MAX1 1000
+param set-default SIM_GZ_EC_MAX2 1000
+param set-default SIM_GZ_EC_MAX3 1000
+param set-default SIM_GZ_EC_MAX4 1000
+param set-default SIM_GZ_EC_MAX5 1000
+param set-default SIM_GZ_EC_MAX6 1000
+
+# --- Chemical pump failsafe (PR-3 invariant — verbatim from 4007_agroswarm_sitl) ---
+# SIM_GZ_SV_FUNC1=201 maps GZ bridge servo ch0 to ACTUATOR_FUNCTION_SERVO0.
+# DIS=0 and FAIL=0: pump is off on disarm and in any failsafe state.
+param set-default SIM_GZ_SV_FUNC1 201
+param set-default SIM_GZ_SV_DIS1 0
+param set-default SIM_GZ_SV_FAIL1 0
+
+param set-default MPC_THR_HOVER 0.60
