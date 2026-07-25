@@ -37,6 +37,8 @@ param set-default COM_ARM_IMU_GYR 0.1
 
 # Operaciones sin RC físico
 param set-default NAV_RCL_ACT 0
+param set-default COM_OBL_RC_ACT 3
+param set-default COM_OF_LOSS_T 1.0
 
 # --- Geometría x500 ---
 param set-default CA_AIRFRAME 0
