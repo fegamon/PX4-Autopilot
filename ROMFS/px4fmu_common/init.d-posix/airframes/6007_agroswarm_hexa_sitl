@@ -44,6 +44,9 @@ param set-default COM_ARM_IMU_GYR 0.1
 
 # SITL has no RC hardware; fly-away guard MUST be disabled
 param set-default NAV_RCL_ACT 0
+# Offboard-loss failsafe: Return mode (RTL) on COM_OF_LOSS_T timeout (PHASE5-R7)
+param set-default COM_OBL_RC_ACT 3
+param set-default COM_OF_LOSS_T 1.0
 
 # --- Hexa-X geometry (stock PX4 6001_hexa_x, 60-degree spacing) ---
 # KM sign convention: negative = CW (motors 0, 2, 5); positive = CCW (motors 1, 3, 4).
